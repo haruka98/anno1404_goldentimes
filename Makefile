@@ -1,2 +1,2 @@
 main:
-	g++ -o goldentimes main.cpp
+	g++ -o goldentimes main.cpp -m32

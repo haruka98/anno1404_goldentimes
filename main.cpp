@@ -47,6 +47,9 @@ int main(int argc, char* argv[]) {
 			if(GetKeyState(VK_NUMPAD9) & 0x8000) {
 				inc_res(hProcess, 2);
 			}
+			if(GetKeyState(VK_NUMPAD7) & 0x8000) {
+				cheat_ship(hProcess);
+			}
 		}
 	}
 	close_process_mem(hProcess);
@@ -161,5 +164,17 @@ void inc_res(HANDLE hProcess, int res_type) {
 		}
 	}
 	WriteProcessMemory(hProcess, (LPVOID)(addr + GOLDPTR_F), value, 16, NULL);
+	return;
+}
+
+void cheat_ship(HANDLE hProcess) {
+	uintptr_t moduleBase = GetModuleBaseAddress(pid, "Addon.exe");
+	uintptr_t addr = 0;
+	BYTE value[4] = {0x64, 0x00, 0x00, 0x00};
+	ReadProcessMemory(hProcess, (LPVOID)(moduleBase + SHIPPTR_A), &addr, sizeof(addr), NULL);
+	ReadProcessMemory(hProcess, (LPVOID)(addr + SHIPPTR_B), &addr, sizeof(addr), NULL);
+	ReadProcessMemory(hProcess, (LPVOID)(addr + SHIPPTR_C), &addr, sizeof(addr), NULL);
+	ReadProcessMemory(hProcess, (LPVOID)(addr + SHIPPTR_D), &addr, sizeof(addr), NULL);
+	WriteProcessMemory(hProcess, (LPVOID)(addr + SHIPPTR_E), value, 4, NULL);
 	return;
 }
